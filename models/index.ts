@@ -1,1 +1,1 @@
-export * from './offer';
+export * from './entity';
