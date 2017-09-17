@@ -7,7 +7,9 @@ import { Action }     from '@ngrx/store';
 
 import { Entity }        from '../models';
 import { ENTITY }        from '../models';
-import { EntityActions } from '../actions';
+import { Paginator }     from '../models';
+import * as entity       from '../actions/entity';
+
 
 export interface EntityFilter {
     key: string;
@@ -36,7 +38,7 @@ const initState: EntitiesState = {keys: [], efilters: {}, ids: [], entities: {},
 /**
  * Topic(includes Merchant) reducer
  */
-export function topicReducer(state = initState, action: any): EntitiesState {
+export function topicReducer(state = initState, action: entity.Actions): EntitiesState {
     if (!action.payload) return state;
 
     if (action.payload.etype === ENTITY.TOPIC)
@@ -48,7 +50,7 @@ export function topicReducer(state = initState, action: any): EntitiesState {
 /**
  * Offer reducer
  */
-export function offerReducer(state = initState, action: any): EntitiesState {
+export function offerReducer(state = initState, action: entity.Actions): EntitiesState {
     if (!action.payload) return state;
 
     if (action.payload.etype === ENTITY.OFFER)
@@ -63,11 +65,11 @@ export function offerReducer(state = initState, action: any): EntitiesState {
 function entitiesReducer(etype: string,
                          state: EntitiesState,
                          // FIXME: Extend 'Action' in ngrx4 with a payload
-                         action: any): EntitiesState {
+                         action: entity.Actions): EntitiesState {
 
     switch (action.type)
     {
-        case EntityActions.LOAD_ENTITIES_SUCCESS:
+        case entity.LOAD_ENTITIES_SUCCESS:
         {
             let key     = action.payload.data.key;
             let pager   = action.payload.data.paginator;
@@ -121,7 +123,7 @@ function entitiesReducer(etype: string,
         }
 
         // Load individual entity, we don't put this entity in to the filters
-        case EntityActions.LOAD_ENTITY_SUCCESS:
+        case entity.LOAD_ENTITY_SUCCESS:
         {
             let id: string;
             if (etype === ENTITY.OFFER)

@@ -6,6 +6,7 @@ export const ENTITY = {
     INVALID: 'invalid',
     OFFER:   'offer',
     PAGE:    'page',
+    TOPIC:   'topic',
 };
 
 /**

@@ -9,92 +9,93 @@ import { Action }            from '@ngrx/store';
 import { Entity }            from '../models';
 import { EntityParams }      from '../models';
 
-export class EntityActions {
-    static SEARCH = '[Entity] Search';
-    static search(etype: string, params: any): Action {
-        return {
-            type: EntityActions.SEARCH,
-            payload: {etype: etype, data: params}
-        };
-    }
+export const SEARCH = '[Entity] Search';
+export const SEARCH_COMPLETE = '[Entity] Search Complete';
+export const LOAD_ENTITIES = '[Entity] Load Entities';
+export const LOAD_ENTITIES_SUCCESS = '[Entity] Load Entities Success';
+export const LOAD_ENTITIES_FAIL = '[Entity] Load Entities Fail';
+export const LOAD_ENTITIES_ON_SCROLL = '[Entity] Load Entities On Scroll';
+export const LOAD_ENTITIES_ON_SCROLL_SUCCESS = '[Entity] Load Entities On Scroll Success';
+export const LOAD_ENTITIES_ON_SCROLL_FAIL = '[Entity] Load Entities On Scroll Fail';
+export const LOAD_ENTITY   = '[Entity] Load Entity';
+export const LOAD_ENTITY_SUCCESS   = '[Entity] Load Entity Success';
+export const LOAD_ENTITY_FAIL = '[Entity] Load Entity Fail';
 
-    static SEARCH_COMPLETE = '[Entity] Search Complete';
-    static searchComplete(etype: string, results: Entity[]): Action {
-        return {
-            type: EntityActions.SEARCH_COMPLETE,
-            payload: {etype: etype, data: results}
-        };
-    }
-
-    static LOAD_ENTITIES = '[Entity] Load Entities';
-    static loadEntities(etype: string, efilter: any): Action {
-        return {
-            type: EntityActions.LOAD_ENTITIES,
-            payload: {etype: etype, data: efilter}
-        };
-    }
-
-    static LOAD_ENTITIES_SUCCESS = '[Entity] Load Entities Success';
-    static loadEntitiesSuccess(etype: string, results: any): Action {
-        return {
-            type: EntityActions.LOAD_ENTITIES_SUCCESS,
-            payload: {etype: etype, data: results}
-        };
-    }
-
-    static LOAD_ENTITIES_FAIL = '[Entity] Load Entities Fail';
-    static loadEntitiesFail(/*etype: string*/): Action {
-        return {
-            type: EntityActions.LOAD_ENTITIES_FAIL/*,
-             payload: {etype: etype}*/
-        };
-    }
-
-    static LOAD_ENTITIES_ON_SCROLL = '[Entity] Load Entities On Scroll';
-    static loadEntitiesOnScroll(etype: string, params: any): Action {
-        return {
-            type: EntityActions.LOAD_ENTITIES_ON_SCROLL,
-            payload: {etype: etype, data: params}
-        };
-    }
-
-    static LOAD_ENTITIES_ON_SCROLL_SUCCESS = '[Entity] Load Entities On Scroll Success';
-    static loadEntitiesOnScrollSuccess(etype: string, results: any): Action {
-        return {
-            type: EntityActions.LOAD_ENTITIES_ON_SCROLL_SUCCESS,
-            payload: {etype: etype, data: results}
-        };
-    }
-
-    static LOAD_ENTITIES_ON_SCROLL_FAIL = '[Entity] Load Entities On Scroll Fail';
-    static loadEntitiesOnScrollFail(/*etype: string*/): Action {
-        return {
-            type: EntityActions.LOAD_ENTITIES_ON_SCROLL_FAIL/*,
-             payload: {etype: etype}*/
-        };
-    }
-
-    static LOAD_ENTITY   = '[Entity] Load Entity';
-    static loadEntity(etype: string, id: string): Action {
-        return {
-            type: EntityActions.LOAD_ENTITY,
-            payload: {etype: etype, data: id}
-        };
-    }
-
-    static LOAD_ENTITY_SUCCESS   = '[Entity] Load Entity Success';
-    static loadEntitySuccess(etype: string, entity: Entity): Action {
-        return {
-            type: EntityActions.LOAD_ENTITY_SUCCESS,
-            payload: { etype: etype, data: entity }
-        };
-    }
-
-    static LOAD_ENTITY_FAIL = '[Entity] Load Entity Fail';
-    static loadEntityFail(/*etype: string*/): Action {
-        return {
-            type: EntityActions.LOAD_ENTITY_FAIL/*,
-             payload: {etype: etype}*/
-        };
-    }
+export class Search implements Action {
+    readonly type = SEARCH;
+    // FIXME: payload: {etype: etype, data: params}
+    constructor(public payload: {etype: string, data: any}) {}
 }
+
+export class SearchComplete implements Action {
+    readonly type = SEARCH_COMPLETE;
+    // FIXME: payload: {etype: etype, data: results}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntities implements Action {
+    readonly type = LOAD_ENTITIES;
+    // FIXME: payload: {etype: etype, data: efilter}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntitiesSuccess implements Action {
+    readonly type = LOAD_ENTITIES_SUCCESS;
+    // FIXME: payload: {etype: etype, data: results}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntitiesFail implements Action {
+    readonly type = LOAD_ENTITIES_FAIL;
+    // TODO: Do we need an 'etype' as payload?
+    // FIXME: WE COULD NOT GET A 'etype' FROM EXCEPTION OF SIDE EFFECT.
+    constructor(public payload: any = null) {}
+}
+
+export class LoadEntitiesOnScroll implements Action {
+    readonly type = LOAD_ENTITIES_ON_SCROLL;
+    // FIXME: payload: {etype: etype, data: params}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntitiesOnScrollSuccess implements Action {
+    readonly type = LOAD_ENTITIES_ON_SCROLL_SUCCESS;
+    // FIXME: payload: {etype: etype, data: results}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntitiesOnScrollFail implements Action {
+    readonly type = LOAD_ENTITIES_ON_SCROLL_FAIL;
+    // TODO: Do we need an 'etype' as payload?
+    constructor(public payload: any = null) {}
+}
+
+export class LoadEntity implements Action {
+    readonly type = LOAD_ENTITY;
+    // FIXME: payload: {etype: etype, data: id}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntitySuccess implements Action {
+    readonly type = LOAD_ENTITY_SUCCESS;
+    // FIXME: payload: { etype: etype, data: entity }
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadEntityFail implements Action {
+    readonly type = LOAD_ENTITY_FAIL;
+    // TODO: Do we need an 'etype' as payload
+    constructor(public payload: any = null) {}
+}
+
+export type Actions = Search
+    | SearchComplete
+    | LoadEntities
+    | LoadEntitiesSuccess
+    | LoadEntitiesFail
+    | LoadEntitiesOnScroll
+    | LoadEntitiesOnScrollSuccess
+    | LoadEntitiesOnScrollFail
+    | LoadEntity
+    | LoadEntitySuccess
+    | LoadEntityFail;

@@ -1,6 +1,6 @@
-import { EntityActions } from './entity';
+import { Actions } from './entity';
 
 export {
-    EntityActions,
+    Actions,
 };
 
