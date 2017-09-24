@@ -10,6 +10,7 @@ import {
     MetaReducer,
 } from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
+import { Observable }  from 'rxjs/Rx';
 
 // Debug tools
 import { storeLogger } from 'ngrx-store-logger';
@@ -24,19 +25,20 @@ import {
     postReducer,
     offerReducer
 } from './entities';
+import {ENTITY_INFO} from "../models/entity";
 
 
 export interface AppState {
-    topics: EntitiesState; /*
+    topics: EntitiesState;
     posts:  EntitiesState;
-    offers: EntitiesState; */
+    offers: EntitiesState;
     routerReducer: fromRouter.RouterReducerState<RouterStateUrl>;
 };
 
 export const reducers: ActionReducerMap<AppState> = {
-    topics: topicReducer,/*
+    topics: topicReducer,
     posts:  postReducer,
-    offers: offerReducer,*/
+    offers: offerReducer,
     routerReducer: fromRouter.routerReducer,
 };
 
@@ -68,16 +70,17 @@ export const metaReducers: MetaReducer<AppState>[] = process.env.ENV != 'product
  * FIXME: how could we do it with the new way???
  **/
 
-/*
+
+// TODO: Read https://github.com/reactjs/reselect/blob/master/README.md#q-how-do-i-create-a-selector-that-takes-an-argument
 export function getEntitiesState(etype: string) {
-    return (state$: Observable<AppState>) => state$
-        .select(ENTITY_INFO[etype].selector);
+    return createFeatureSelector<AppState>(ENTITY_INFO[etype].selector);
+    //return state[ENTITY_INFO[etype].selector];
 }
-*/
-/*
+
+
 export const getEntitiesState =
-    createFeatureSelector<AppState>(ENTITY_INFO['topic'].selector);
-*/
+    (state: AppState, etype: string) => state[ENTITY_INFO[etype].selector];
+
 
 // This equals to: getTopicsState = (state: AppState) => state.topics;
 //export const getTopicsState = createFeatureSelector<AppState>('topics');
@@ -105,6 +108,13 @@ export const getOfferEntitiesState = createSelector(
     state => state.offers
 );
 */
+export function getCurEntityId(etype: string) {
+    return createSelector(
+        getEntitiesState(etype),
+        fromEntities.getCurID
+    );
+}
+
 export const getCurTopicId = createSelector(
     getTopicsState,
     fromEntities.getCurID
@@ -144,6 +154,14 @@ export function getCurEntity(etype: string) {
     return compose(fromEntities.getCurEntity(), getEntitiesState(etype));
 }
 */
+export function getCurEntity(etype: string) {
+    return createSelector(
+        getEntitiesState(etype),
+        getCurEntityId(etype),
+        (entities, id) => { return id && entities[id]; }
+    );
+}
+
 export const getCurTopic = createSelector(
     getTopicEntities,
     getCurTopicId,

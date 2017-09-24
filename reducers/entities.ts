@@ -4,7 +4,6 @@
 
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Observable } from 'rxjs/Observable';
-import { Action }     from '@ngrx/store';
 
 import { Entity }        from '../models';
 import { ENTITY }        from '../models';
@@ -19,6 +18,7 @@ export interface EntityFilter {
     ids: string[];
 }
 
+// TODO: Enable @ngrx/entity when everything works
 export interface EntitiesState /*extends EntityState<Entity>*/ {
     keys: string[];
     efilters: { [key: string]: EntityFilter };
@@ -27,7 +27,7 @@ export interface EntitiesState /*extends EntityState<Entity>*/ {
     entities: {[id: string]: Entity };
 
     // Current active entity id
-    id: string | null;
+    activeId: string | null;
 }
 
 /*
@@ -36,6 +36,7 @@ export const adapter: EntityAdapter<Entity> = createEntityAdapter<Entity>({
     sortComparer: false
 });
 */
+
 /**
  * Initial state
  */
@@ -44,15 +45,15 @@ const initState: EntitiesState = { //adapter.getInitialState({
     efilters: {},
     ids: [],
     entities: {},
-    id: '0' // FIXME: set to null
+    activeId: null
 }; //);
 
 
 /**
  * Topic reducer
  */
-export function topicReducer(state = initState, action: entity.Actions): EntitiesState {
-    console.log("REDUCER: topicReducer()");
+export function topicReducer(state = initState,
+                             action: entity.Actions): EntitiesState {
     if (!action.payload) return state;
 
     if (action.payload.etype === ENTITY.TOPIC)
@@ -64,7 +65,8 @@ export function topicReducer(state = initState, action: entity.Actions): Entitie
 /**
  * Post reducer
  */
-export function postReducer(state = initState, action: entity.Actions): EntitiesState {
+export function postReducer(state = initState,
+                            action: entity.Actions): EntitiesState {
     if (!action.payload) return state;
 
     if (action.payload.etype === ENTITY.POST)
@@ -76,7 +78,8 @@ export function postReducer(state = initState, action: entity.Actions): Entities
 /**
  * Offer reducer
  */
-export function offerReducer(state = initState, action: entity.Actions): EntitiesState {
+export function offerReducer(state = initState,
+                             action: entity.Actions): EntitiesState {
     if (!action.payload) return state;
 
     if (action.payload.etype === ENTITY.OFFER)
@@ -86,11 +89,21 @@ export function offerReducer(state = initState, action: entity.Actions): Entitie
 }
 
 /**
+ * Helper function to return the index type of entities
+ * @param etype
+ * @returns {any}
+ */
+function getIdx(etype: string)
+{
+    if (etype === ENTITY.TOPIC) return 'guid';
+    else return 'id';
+}
+
+/**
  * A generic reducer for all entity types
  */
 function entitiesReducer(etype: string,
                          state: EntitiesState,
-                         // FIXME: Extend 'Action' in ngrx4 with a payload
                          action: entity.Actions): EntitiesState {
 
     switch (action.type)
@@ -101,12 +114,7 @@ function entitiesReducer(etype: string,
             let pager   = action.payload.data.paginator;
             let entities: Entity[] = action.payload.data.entities;
 
-            let idx: string;
-            if (etype === ENTITY.OFFER)
-                idx = 'guid';
-            else
-                idx = 'id';
-
+            let idx: string = getIdx(etype);
 
             // Extract entity ids and form new group of entities
             let ids         = entities.map(e => e[idx]);
@@ -152,12 +160,8 @@ function entitiesReducer(etype: string,
         // Load individual entity, we don't put this entity in to the filters
         case entity.LOAD_ENTITY_SUCCESS:
         {
-            console.log("REDUCER: entity.LOAD_ENTITY_SUCCESS");
-            let id: string;
-            if (etype === ENTITY.OFFER)
-                id = action.payload.data['guid'];
-            else
-                id = action.payload.data['id'];
+            let idx: string = getIdx(etype);
+            let id: string = action.payload.data[idx];
 
             // Merge loaded entity into the top level id array
             // FIXME: We can't use state.ids.indexOf(id) due to TSC build error
@@ -168,7 +172,7 @@ function entitiesReducer(etype: string,
                 ids: newIds,
                 entities: Object.assign({}, state.entities,
                     {[id]: action.payload.data}),
-                id: id,
+                activeId: id,
             });
         }
 
@@ -203,6 +207,9 @@ export function getCurEntity() {
 }
 */
 
-export const getCurID = (state: EntitiesState) => state.id;
+export const getCurID = (state: EntitiesState) => state.activeId;
+
+export const getCurEntity =
+    (state: EntitiesState) => state.activeId && state.entities[state.activeId];
 
 export const getEntities = (state: EntitiesState) => state.entities;

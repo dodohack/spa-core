@@ -25,20 +25,17 @@ export const LOAD_ENTITY_FAIL = '[Entity] Load Entity Fail';
 
 export class Search implements Action {
     readonly type = SEARCH;
-    // FIXME: payload: {etype: etype, data: params}
-    constructor(public payload: {etype: string, data: any}) {}
+    constructor(public payload: {etype: string, data: any/* params */}) {}
 }
 
 export class SearchComplete implements Action {
     readonly type = SEARCH_COMPLETE;
-    // FIXME: payload: {etype: etype, data: results}
     constructor(public payload: {etype: string, data: Entity[]}) {}
 }
 
 export class LoadEntities implements Action {
     readonly type = LOAD_ENTITIES;
-    // FIXME: payload: {etype: etype, data: efilter}
-    constructor(public payload: {etype: string, data: any}) {}
+    constructor(public payload: {etype: string, data: any/* efilter */}) {}
 }
 
 export class LoadGroupEntities implements Action {
@@ -48,7 +45,6 @@ export class LoadGroupEntities implements Action {
 
 export class LoadEntitiesSuccess implements Action {
     readonly type = LOAD_ENTITIES_SUCCESS;
-    // FIXME: payload: {etype: etype, data: results}
     constructor(public payload: {etype: string, data: any}) {}
 }
 
@@ -66,13 +62,11 @@ export class LoadEntitiesFail implements Action {
 
 export class LoadEntitiesOnScroll implements Action {
     readonly type = LOAD_ENTITIES_ON_SCROLL;
-    // FIXME: payload: {etype: etype, data: params}
-    constructor(public payload: {etype: string, data: any}) {}
+    constructor(public payload: {etype: string, data: any/* params */}) {}
 }
 
 export class LoadEntitiesOnScrollSuccess implements Action {
     readonly type = LOAD_ENTITIES_ON_SCROLL_SUCCESS;
-    // FIXME: payload: {etype: etype, data: results}
     constructor(public payload: {etype: string, data: any}) {}
 }
 
@@ -84,18 +78,12 @@ export class LoadEntitiesOnScrollFail implements Action {
 
 export class LoadEntity implements Action {
     readonly type = LOAD_ENTITY;
-    // FIXME: payload: {etype: etype, data: id}
-    constructor(public payload: {etype: string, data: string}) {
-        console.log("ACTION: LOAD_ENTITY", payload.etype, ", ", payload.data);
-    }
+    constructor(public payload: {etype: string, data: string}) {}
 }
 
 export class LoadEntitySuccess implements Action {
     readonly type = LOAD_ENTITY_SUCCESS;
-    // FIXME: payload: { etype: etype, data: entity }
-    constructor(public payload: {etype: string, data: Entity}) {
-        console.log("ACTION: LOAD_ENTITY_SUCCESS", payload.etype, ", ", payload.data);
-    }
+    constructor(public payload: {etype: string, data: Entity}) {}
 }
 
 export class LoadEntityFail implements Action {
