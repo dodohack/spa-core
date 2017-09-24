@@ -41,14 +41,9 @@ export const reducers: ActionReducerMap<AppState> = {
 };
 
 // Console.log all actions
-// FIXME: If we don't call logger, reducer will not be triggered.
-export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
-    return function(state: AppState, action: any): AppState {
-        console.log('state', state);
-        console.log('action', action);
 
-        return reducer(state, action);
-    };
+export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
+    return storeLogger()(reducer);
 }
 
 
@@ -58,7 +53,6 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
  * meta-reducers that will be composed to from the root meta-reducer.
  */
 export const metaReducers: MetaReducer<AppState>[] = process.env.ENV != 'production'
-    //? [storeLogger, storeFreeze]
     ? [logger, storeFreeze]
     : [];
 
