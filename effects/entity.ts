@@ -42,6 +42,29 @@ export class EntityEffects {
                     .catch(() => Observable.of(new Entity.LoadEntitiesFail()))
             );
 
+    /**
+     * Load single entity
+     */
+    @Effect() loadEntity$: Observable<Action> =
+        this.actions$.ofType(Entity.LOAD_ENTITY)
+            .switchMap((action: Entity.LoadEntity) =>
+            this.getEntity(action.payload.etype, action.payload.data)
+                .filter(ret => ret.entity != null)
+                .map(ret => new Entity.LoadEntitySuccess({etype: ret.etype, data: ret.entity}))
+                /*
+                .mergeMap(ret => {
+                    let actions: Action[] = [];
+                    console.log("SIDE EFFECT: About to dispatch LoadEntitySuccess Action");
+                    console.log("SIDE EFFECT RETURN: ", ret);
+                    actions[0] = new Entity.LoadEntitySuccess({etype: ret.etype, data: ret.entity});
+                    // The second action is just an indicator of the finish status
+                    //action[1] = AlertActions.loadCompleted();
+                    return Observable.from(actions);
+                })
+                */
+                .catch(() => Observable.of(new Entity.LoadEntityFail()))
+            );
+
 
     /************************************************************************
      * Helper functions
@@ -52,8 +75,18 @@ export class EntityEffects {
      */
     private getApi(t: string, group = false) {
         switch (t) {
+            case ENTITY.TOPIC:
+                return API('topics');
+            case ENTITY.POST:
+                return API('posts');
             case ENTITY.OFFER:
                 return API('offers');
+            case ENTITY.PAGE:
+                return API('pages');
+            case ENTITY.ADVERTISE:
+                return API('advertises');
+            case ENTITY.COMMENT:
+                return API('comments');
             default:
                 return null;
         }
@@ -96,8 +129,9 @@ export class EntityEffects {
      * Request a entity from API server
      */
     protected getEntity(etype: string, id: string): Observable<any> {
+        console.log("SIDE EFFECT: getEntity()");
         let api = this.getApi(etype, false) + '/' + id + '?etype=' + etype;
-        return this.http.get(api).map(res => res.json);
+        return this.http.get(api).map(res => res.json());
     }
 
     /**
@@ -109,4 +143,24 @@ export class EntityEffects {
 
         return this.http.get(api).map(res => res.json());
     }
+
+    /**
+     * Get multiple group of entities, return multiple group of entities
+     *
+     * URL pattern:
+     * ?group=[{"params": "key=<string>;etype=<etypt>;..."}, {...}, ...]
+     *
+     * E.g:
+     * ?group=[{"params": "key=latest_post;etype=cms-post;channel=shopping;per_page=6"},
+     *         {"params": "key=featured_deal;etype=deal-topic;channel=shopping;per_page=10;type=brand;order_by=ranking;order=desc"}
+     *        ]
+     *
+     * Any parameters used in common entities queries can be used in the group
+     * query.
+     */
+    protected getGroupEntities(paramGroups: any): Observable<any> {
+        let api = API('batch') + '?group=' + this.buildMultiGroupFilters(paramGroups);
+        return this.http.get(api).map(res => res.json());
+    }
+
 }

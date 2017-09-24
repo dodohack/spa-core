@@ -12,7 +12,9 @@ import { EntityParams }      from '../models';
 export const SEARCH = '[Entity] Search';
 export const SEARCH_COMPLETE = '[Entity] Search Complete';
 export const LOAD_ENTITIES = '[Entity] Load Entities';
+export const LOAD_GROUP_ENTITIES = '[Entity] Load Group Entities';
 export const LOAD_ENTITIES_SUCCESS = '[Entity] Load Entities Success';
+export const LOAD_GROUP_ENTITIES_SUCCESS = '[Entity] Load Group Entities Success';
 export const LOAD_ENTITIES_FAIL = '[Entity] Load Entities Fail';
 export const LOAD_ENTITIES_ON_SCROLL = '[Entity] Load Entities On Scroll';
 export const LOAD_ENTITIES_ON_SCROLL_SUCCESS = '[Entity] Load Entities On Scroll Success';
@@ -30,7 +32,7 @@ export class Search implements Action {
 export class SearchComplete implements Action {
     readonly type = SEARCH_COMPLETE;
     // FIXME: payload: {etype: etype, data: results}
-    constructor(public payload: {etype: string, data: any}) {}
+    constructor(public payload: {etype: string, data: Entity[]}) {}
 }
 
 export class LoadEntities implements Action {
@@ -39,9 +41,19 @@ export class LoadEntities implements Action {
     constructor(public payload: {etype: string, data: any}) {}
 }
 
+export class LoadGroupEntities implements Action {
+    readonly type = LOAD_GROUP_ENTITIES;
+    constructor(public payload: {params: EntityParams[]}) {}
+}
+
 export class LoadEntitiesSuccess implements Action {
     readonly type = LOAD_ENTITIES_SUCCESS;
     // FIXME: payload: {etype: etype, data: results}
+    constructor(public payload: {etype: string, data: any}) {}
+}
+
+export class LoadGroupEntitiesSuccess implements Action {
+    readonly type = LOAD_GROUP_ENTITIES_SUCCESS;
     constructor(public payload: {etype: string, data: any}) {}
 }
 
@@ -73,13 +85,17 @@ export class LoadEntitiesOnScrollFail implements Action {
 export class LoadEntity implements Action {
     readonly type = LOAD_ENTITY;
     // FIXME: payload: {etype: etype, data: id}
-    constructor(public payload: {etype: string, data: any}) {}
+    constructor(public payload: {etype: string, data: string}) {
+        console.log("ACTION: LOAD_ENTITY", payload.etype, ", ", payload.data);
+    }
 }
 
 export class LoadEntitySuccess implements Action {
     readonly type = LOAD_ENTITY_SUCCESS;
     // FIXME: payload: { etype: etype, data: entity }
-    constructor(public payload: {etype: string, data: any}) {}
+    constructor(public payload: {etype: string, data: Entity}) {
+        console.log("ACTION: LOAD_ENTITY_SUCCESS", payload.etype, ", ", payload.data);
+    }
 }
 
 export class LoadEntityFail implements Action {
@@ -91,7 +107,9 @@ export class LoadEntityFail implements Action {
 export type Actions = Search
     | SearchComplete
     | LoadEntities
+    | LoadGroupEntities
     | LoadEntitiesSuccess
+    | LoadGroupEntitiesSuccess
     | LoadEntitiesFail
     | LoadEntitiesOnScroll
     | LoadEntitiesOnScrollSuccess
