@@ -66,22 +66,26 @@ export class EntityEffects {
 
 
     // TODO: Ref https://github.com/vsavkin/state_management_ngrx4/blob/master/clientapp/src/app/model.ts
+    /*
     @Effect() navToEntity$ =
         this.actions$.ofType(ROUTER_NAVIGATION)
             .map(this.firstSegment)
             //.filter(s => s.urlseg[0].path == 'deal')
             .map(s => {
                 console.log("PAYLOAD OF ROUTER_NAVIGATION: ", s);
-                return new Entity.LoadEntity({etype: 'topic', data: 'vitabiotics' /*s.params.guid*/ });
+                return new Entity.LoadEntity({etype: 'topic', data: 'vitabiotics' });
             });
+    */
 
     /************************************************************************
      * Helper functions
      ************************************************************************/
 
+    /*
     private firstSegment(r: RouterNavigationAction) {
         return r.payload.routerState.root.firstChild;
     }
+    */
 
     /**
      * Get API base by given entity type

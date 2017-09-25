@@ -51,7 +51,6 @@ export abstract class EntityBase implements OnInit, OnDestroy
     // FIXME: from effects as well.
     // REF: https://blog.nrwl.io/using-ngrx-4-to-manage-state-in-angular-applications-64e7a1f84b7b
     dispatchLoadEntity() {
-        /*
         this.subParams = this.route.params.distinctUntilChanged()
             .filter(params =>
             params.hasOwnProperty('id') || params.hasOwnProperty('guid'))
@@ -60,6 +59,5 @@ export abstract class EntityBase implements OnInit, OnDestroy
                 let payload = { etype: this.etype, data: id };
                 this.store.dispatch(new entity.LoadEntity(payload));
             });
-            */
     }
 }
