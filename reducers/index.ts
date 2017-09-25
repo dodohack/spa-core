@@ -19,13 +19,14 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { RouterStateUrl } from '../utils';
 import * as fromEntities  from './entities';
 import { EntitiesState }  from './entities';
+import {ENTITY_INFO}      from "../models/entity";
 
 import {
     topicReducer,
     postReducer,
-    offerReducer
+    offerReducer,
 } from './entities';
-import {ENTITY_INFO} from "../models/entity";
+
 
 
 export interface AppState {
@@ -64,103 +65,42 @@ export const metaReducers: MetaReducer<AppState>[] = process.env.ENV != 'product
  * Entities - must be called with entity type
  *****************************************************************************/
 
-
-/**
- * FIXME: Previously, we can parameterize getEntitiesState with 'etype', but
- * FIXME: how could we do it with the new way???
- **/
-
-
 // TODO: Read https://github.com/reactjs/reselect/blob/master/README.md#q-how-do-i-create-a-selector-that-takes-an-argument
-export function getEntitiesState(etype: string) {
-    return createFeatureSelector<AppState>(ENTITY_INFO[etype].selector);
-    //return state[ENTITY_INFO[etype].selector];
-}
+// TODO: https://stackoverflow.com/questions/45108947/selectors-for-multiple-instance-of-ngrx-reducers
 
-
-export const getEntitiesState =
-    (state: AppState, etype: string) => state[ENTITY_INFO[etype].selector];
-
-
-// This equals to: getTopicsState = (state: AppState) => state.topics;
-//export const getTopicsState = createFeatureSelector<AppState>('topics');
 export const getTopicsState = (state: AppState) => state.topics;
-
-/*
-export const getOffersState = createFeatureSelector<AppState>('offers');
-
-export const getPostsState = createFeatureSelector<AppState>('posts');
-*/
-/*
-export const getTopicEntitiesState = createSelector(
-    getTopicsState,
-    state => state.entities
-);
-*/
-/*
-export const getPostEntitiesState = createSelector(
-    getPostsState,
-    state => state.posts
-);
-
-export const getOfferEntitiesState = createSelector(
-    getOffersState,
-    state => state.offers
-);
-*/
-export function getCurEntityId(etype: string) {
-    return createSelector(
-        getEntitiesState(etype),
-        fromEntities.getCurID
-    );
-}
+export const getOffersState = (state: AppState) => state.offers;
+export const getPostsState  = (state: AppState) => state.posts;
 
 export const getCurTopicId = createSelector(
     getTopicsState,
     fromEntities.getCurID
 );
-/*
+
 export const getCurOfferId = createSelector(
-    getOfferEntitiesState,
+    getOffersState,
     fromEntities.getCurID
 );
 
 export const getCurPostId = createSelector(
-    getPostEntitiesState,
+    getPostsState,
     fromEntities.getCurID
 );
-*/
+
 export const getTopicEntities = createSelector(
     getTopicsState,
     fromEntities.getEntities
-    //state => state.entities
 );
 
-/*
-export const {
-    selectIds: getTopicIds,
-    selectEntities: getTopicEntities,
-    selectAll: getAllTopics,
-    selectTotal: getTotalTopics,
-} = fromEntities.adapter.getSelectors(getTopicsState);
-*/
+export const getOfferEntities = createSelector(
+    getOffersState,
+    fromEntities.getEntities
+);
 
-/*
-export function getEntity(etype: string, id: any) {
-    return compose(fromEntities.getEntity(id), getEntitiesState(etype));
-}
-
-export function getCurEntity(etype: string) {
-    return compose(fromEntities.getCurEntity(), getEntitiesState(etype));
-}
-*/
-export function getCurEntity(etype: string) {
-    return createSelector(
-        getEntitiesState(etype),
-        getCurEntityId(etype),
-        (entities, id) => { return id && entities[id]; }
-    );
-}
+export const getPostEntities = createSelector(
+    getPostsState,
+    fromEntities.getEntities
+);
 
 export const getCurTopic = createSelector(
     getTopicEntities,
@@ -168,7 +108,6 @@ export const getCurTopic = createSelector(
     (entities, id) => { return id && entities[id]; }
 );
 
-/*
 export const getCurOffer = createSelector(
     getOfferEntities,
     getCurOfferId,
@@ -176,8 +115,7 @@ export const getCurOffer = createSelector(
 );
 
 export const getCurPost = createSelector(
-    getPostsState,
+    getPostEntities,
     getCurPostId,
     (entities, id) => { return id && entities[id]; }
 );
-*/

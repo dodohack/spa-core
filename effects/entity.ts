@@ -7,6 +7,7 @@ import { Injectable }       from '@angular/core';
 import { Observable }       from 'rxjs/Rx';
 import { Effect, Actions, toPayload }  from '@ngrx/effects';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
 
 import { API }                   from '../api';
 import { ENTITY, EntityParams }  from '../models';
@@ -54,8 +55,6 @@ export class EntityEffects {
                 /*
                 .mergeMap(ret => {
                     let actions: Action[] = [];
-                    console.log("SIDE EFFECT: About to dispatch LoadEntitySuccess Action");
-                    console.log("SIDE EFFECT RETURN: ", ret);
                     actions[0] = new Entity.LoadEntitySuccess({etype: ret.etype, data: ret.entity});
                     // The second action is just an indicator of the finish status
                     //action[1] = AlertActions.loadCompleted();
@@ -66,9 +65,23 @@ export class EntityEffects {
             );
 
 
+    // TODO: Ref https://github.com/vsavkin/state_management_ngrx4/blob/master/clientapp/src/app/model.ts
+    @Effect() navToEntity$ =
+        this.actions$.ofType(ROUTER_NAVIGATION)
+            .map(this.firstSegment)
+            //.filter(s => s.urlseg[0].path == 'deal')
+            .map(s => {
+                console.log("PAYLOAD OF ROUTER_NAVIGATION: ", s);
+                return new Entity.LoadEntity({etype: 'topic', data: 'vitabiotics' /*s.params.guid*/ });
+            });
+
     /************************************************************************
      * Helper functions
      ************************************************************************/
+
+    private firstSegment(r: RouterNavigationAction) {
+        return r.payload.routerState.root.firstChild;
+    }
 
     /**
      * Get API base by given entity type

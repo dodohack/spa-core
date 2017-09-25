@@ -1,5 +1,5 @@
 import { RouterStateSerializer }       from '@ngrx/router-store';
-import { RouterStateSnapshot, Params } from '@angular/router';
+import { RouterStateSnapshot, Params, UrlSegment } from '@angular/router';
 
 /**
  * The RouterStateSerializer takes the current RouterStateSnapshot and returns
@@ -10,16 +10,21 @@ import { RouterStateSnapshot, Params } from '@angular/router';
  */
 
 export interface RouterStateUrl {
+    //url: UrlSegment[];
     url: string;
+    urlseg: UrlSegment[];
+    params: Params;
     queryParams: Params;
 }
 
 export class CustomRouterStateSerializer
   implements  RouterStateSerializer<RouterStateUrl> {
     serialize(routerState: RouterStateSnapshot): RouterStateUrl {
-        const { url } = routerState;
+        const url     = routerState.url;
+        const urlseg  = [...routerState.root.firstChild.url];
+        const params  = routerState.root.firstChild.params;
         const queryParams = routerState.root.queryParams;
 
-        return { url, queryParams};
+        return { url, urlseg, params, queryParams};
     }
 }

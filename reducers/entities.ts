@@ -2,7 +2,7 @@
  * Entity reducer
  */
 
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+//import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Observable } from 'rxjs/Observable';
 
 import { Entity }        from '../models';
